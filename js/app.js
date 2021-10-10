@@ -16,7 +16,23 @@ class User {
         }
       );
       let userData = await response.json();
-      return userData;
+
+      let reposRes = await fetch(
+        `https://api.github.com/users/${userData.login}/repos`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `8c203da63af09d197a52 170b9b9fc30d39e0289267aa0dc2cad5dbc4dfab`,
+          },
+        }
+      );
+      let userRepos = await reposRes.json();
+      let latestRepos = userRepos
+        .sort((a, b) => {
+          return new Date(b.created_at) - new Date(a.created_at);
+        })
+        .slice(0, 5);
+      return { userData, latestRepos };
     } catch (error) {
       console.log(error);
     }
@@ -57,54 +73,38 @@ class User {
   <div class="card mt-3">
     <div class="card-header">Latest Repos</div>
 
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-md-6">
-            <strong>An item</strong>:short description
-          </div>
-          <div class="col-md-3">
-            <span class="badge badge-secondary">Secondary</span>
-            <span class="badge badge-success">Success</span>
-            <span class="badge badge-danger">Danger</span>
-          </div>
-          <div class="col-md-3">
-            <a href="" class="btn btn-dark">Repo Page</a>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-md-6">
-            <strong>An item</strong>:short description
-          </div>
-          <div class="col-md-3">
-            <span class="badge badge-secondary">Secondary</span>
-            <span class="badge badge-success">Success</span>
-            <span class="badge badge-danger">Danger</span>
-          </div>
-          <div class="col-md-3">
-            <a href="" class="btn btn-dark">Repo Page</a>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-md-6">
-            <strong>An item</strong>:short description
-          </div>
-          <div class="col-md-3">
-            <span class="badge badge-secondary">Secondary</span>
-            <span class="badge badge-success">Success</span>
-            <span class="badge badge-danger">Danger</span>
-          </div>
-          <div class="col-md-3">
-            <a href="" class="btn btn-dark">Repo Page</a>
-          </div>
-        </div>
-      </li>
+    <ul id='latest_repo' class="list-group list-group-flush">
+      
     </ul>
   </div>`;
+  }
+
+  showLatestRepo(reposArr) {
+    const repoList = document.querySelector('#latest_repo');
+    let list = reposArr.map((repo) => {
+      const listItem = `<li class='list-group-item'>
+                        <div class='row'>
+                          <div class='col-md-6'>
+                            <strong>${repo.name}</strong>:${repo.description}
+                          </div>
+                          <div class='col-md-3'>
+                            <span class='badge badge-secondary'>Forks: ${repo.forks}</span>
+                            <span class='badge badge-success'>Watchers: ${repo.watchers}</span>
+                            <span class='badge badge-danger'>Stars: ${repo.forks}</span>
+                          </div>
+                          <div class='col-md-3'>
+                            <a href=${repo.url} class='btn btn-dark'>
+                              Repo Page
+                            </a>
+                          </div>
+                        </div>
+                      </li>`;
+      return listItem;
+    });
+
+    repoList.innerHTML = list.reduce((current, item) => {
+      return current + item;
+    }, ``);
   }
 }
 
@@ -112,7 +112,7 @@ class User {
 const user = new User();
 userName.addEventListener('keyup', () => {
   user.getUser().then((data) => {
-    console.log(data);
-    user.showUserProfile(data);
+    user.showUserProfile(data.userData);
+    user.showLatestRepo(data.latestRepos);
   });
 });
