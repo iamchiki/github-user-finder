@@ -50,7 +50,7 @@ class User {
             alt="profil-img"
           />
           <div class="mt-3">
-            <a href=${userData.html_url} class="btn btn-info col-md-12">Profile Info</a>
+            <a href=${userData.html_url} class="btn btn-info col-md-12">View Profile</a>
           </div>
         </div>
         <div class="col-md-9">
@@ -85,7 +85,7 @@ class User {
       const listItem = `<li class='list-group-item'>
                         <div class='row'>
                           <div class='col-md-6'>
-                            <strong>${repo.name}</strong>:${repo.description}
+                            <strong>${repo.name}</strong>: ${repo.description}
                           </div>
                           <div class='col-md-3'>
                             <span class='badge badge-secondary'>Forks: ${repo.forks}</span>
@@ -93,7 +93,7 @@ class User {
                             <span class='badge badge-danger'>Stars: ${repo.forks}</span>
                           </div>
                           <div class='col-md-3'>
-                            <a href=${repo.url} class='btn btn-dark'>
+                            <a href=${repo.html_url} target='_blank' class='btn btn-dark'>
                               Repo Page
                             </a>
                           </div>
