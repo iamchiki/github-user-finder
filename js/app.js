@@ -49,8 +49,8 @@ class User {
             class="card-img-top"
             alt="profil-img"
           />
-          <div class="mt-3">
-            <a href=${userData.html_url} class="btn btn-info col-md-12">View Profile</a>
+          <div class="my-3">
+            <a href=${userData.html_url} target="_blank" class="btn btn-info col-md-12">View Profile</a>
           </div>
         </div>
         <div class="col-md-9">
@@ -70,7 +70,7 @@ class User {
       </div>
     </div>
   </div>
-  <div class="card mt-3">
+  <div class="card my-3">
     <div class="card-header">Latest Repos</div>
 
     <ul id='latest_repo' class="list-group list-group-flush">
@@ -87,13 +87,13 @@ class User {
                           <div class='col-md-6'>
                             <strong>${repo.name}</strong>: ${repo.description}
                           </div>
-                          <div class='col-md-3'>
+                          <div class='col-md-3 mb-3'>
                             <span class='badge badge-secondary'>Forks: ${repo.forks}</span>
                             <span class='badge badge-success'>Watchers: ${repo.watchers}</span>
                             <span class='badge badge-danger'>Stars: ${repo.forks}</span>
                           </div>
                           <div class='col-md-3'>
-                            <a href=${repo.html_url} target='_blank' class='btn btn-dark'>
+                            <a href=${repo.html_url} target='_blank' class='btn btn-dark btn-block'>
                               Repo Page
                             </a>
                           </div>
