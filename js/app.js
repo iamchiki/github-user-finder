@@ -110,9 +110,27 @@ class User {
 
 // event listner
 const user = new User();
-userName.addEventListener('keyup', () => {
+
+// debounce function
+function debounce(fn, delay) {
+  let clearTimer;
+  return function (...arg) {
+    clearTimeout(clearTimer);
+    clearTimer = setTimeout(() => {
+      fn.apply(this, arg);
+    }, delay);
+  };
+}
+
+function fetchUserInfo() {
   user.getUser().then((data) => {
     user.showUserProfile(data.userData);
     user.showLatestRepo(data.latestRepos);
   });
+}
+
+const delayFetchUserInfo = debounce(fetchUserInfo, 1000);
+
+userName.addEventListener('keyup', () => {
+  delayFetchUserInfo();
 });
