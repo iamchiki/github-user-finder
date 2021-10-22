@@ -7,24 +7,12 @@ class User {
   async getUser() {
     try {
       let response = await fetch(
-        `https://api.github.com/users/${userName.value}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `8c203da63af09d197a52 170b9b9fc30d39e0289267aa0dc2cad5dbc4dfab`,
-          },
-        }
+        `https://api.github.com/users/${userName.value}`
       );
       let userData = await response.json();
 
       let reposRes = await fetch(
-        `https://api.github.com/users/${userData.login}/repos`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `8c203da63af09d197a52 170b9b9fc30d39e0289267aa0dc2cad5dbc4dfab`,
-          },
-        }
+        `https://api.github.com/users/${userData.login}/repos`
       );
       let userRepos = await reposRes.json();
       let latestRepos = userRepos
@@ -39,6 +27,7 @@ class User {
   }
 
   showUserProfile(userData) {
+    const createdDate = this.formateDate(userData.created_at);
     userProfile.innerHTML = `<div class="card mt-3">
     <div class="card-header">${userData.name}</div>
     <div class="card-body">
@@ -50,20 +39,35 @@ class User {
             alt="profil-img"
           />
           <div class="my-3">
-            <a href=${userData.html_url} target="_blank" class="btn btn-info col-md-12">View Profile</a>
+            <a href=${
+              userData.html_url
+            } target="_blank" class="btn btn-info col-md-12">View Profile</a>
           </div>
         </div>
         <div class="col-md-9">
-          <span class="badge badge-primary">Public Repos: ${userData.public_repos}</span>
-          <span class="badge badge-secondary">Public Gists: ${userData.public_gists}</span>
-          <span class="badge badge-success">Followers: ${userData.followers}</span>
-          <span class="badge badge-danger">Following: ${userData.following}</span>
+          <span class="badge badge-primary">Public Repos: ${
+            userData.public_repos
+          }</span>
+          <span class="badge badge-secondary">Public Gists: ${
+            userData.public_gists
+          }</span>
+          <span class="badge badge-success">Followers: ${
+            userData.followers
+          }</span>
+          <span class="badge badge-danger">Following: ${
+            userData.following
+          }</span>
           <div class="mt-3">
             <ul class="list-group">
-              <li class="list-group-item">Company: ${userData.company}</li>
-              <li class="list-group-item">Website/blog: <a href=${userData.blog}>${userData.blog}</a></li>
+              <li class="list-group-item">Company: ${
+                userData.company ?? 'Not Available'
+              }</li>
+              <li class="list-group-item">Website/blog: <a href=${
+                userData.blog
+              }>
+              ${userData.blog}</a></li>
               <li class="list-group-item">Location: ${userData.location}</li>
-              <li class="list-group-item">Member Since: ${userData.created_at}</li>
+              <li class="list-group-item">Member Since: ${createdDate}</li>
             </ul>
           </div>
         </div>
@@ -105,6 +109,17 @@ class User {
     repoList.innerHTML = list.reduce((current, item) => {
       return current + item;
     }, ``);
+  }
+
+  formateDate(date) {
+    const dateObj = new Date(date);
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    return dateObj.toLocaleDateString('en-US', options);
   }
 }
 
